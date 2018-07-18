@@ -19,12 +19,12 @@ def login(request):
 
 
 def get_singles(request):
-    result = []
+    result = {'result': []}
     for i in range(6):
         user = requests.get('https://randomuser.me/api/').json().get('results', [])[0]
         user_name = user.get('name', {})
         try:
-            result.append({'name':
+            result['result'].append({'name':
                                '{} {}'.format(user_name.get('first', ''), user_name.get('last', '')),
                            'photoUrl':
                                user.get('picture', {}).get('large', '')
@@ -32,4 +32,4 @@ def get_singles(request):
         except UnicodeEncodeError:
             i = i - 1
             continue
-    return HttpResponse(result)
+    return HttpResponse(json.dumps(result), content_type="application/json")
