@@ -20,7 +20,6 @@ import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url('login', views.login),
     url('singles', views.get_singles),
 
 ]
