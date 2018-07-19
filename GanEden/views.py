@@ -7,7 +7,6 @@ import requests
 
 def get_singles(request):
     result = {'result': []}
-    # user = requests.get('https://randomuser.me/api/').json().get('results', [])[0]
     users = requests.get('http://www.designskilz.com/random-users/fakeusers.json').json()
     male_picture_indexes = sample(range(1, 52), 6)
     female_picture_indexes = sample(range(1, 52), 6)
@@ -22,14 +21,17 @@ def get_singles(request):
 
     last_name_indexes = sample(range(0, 112), 12)
     last_names = [users.get('lastNames', {})[i] for i in last_name_indexes]
-
+    male_index = 0
+    female_index = 0
     for i in range(12):
-        if i < 6:
-            user = {'name': '{} {}'.format(males_first_names[i], last_names[i]),
-                    'photoUrl': males_pictures_urls[i]}
+        if i % 2 == 0:
+            user = {'name': '{} {}'.format(males_first_names[male_index], last_names[male_index]),
+                    'photoUrl': males_pictures_urls[male_index]}
+            male_index += 1
         else:
-            user = {'name': '{} {}'.format(females_first_names[5-i], last_names[5-i]),
-                    'photoUrl': females_pictures_urls[5-i]}
+            user = {'name': '{} {}'.format(females_first_names[female_index], last_names[female_index]),
+                    'photoUrl': females_pictures_urls[female_index]}
+            female_index += 1
 
         result['result'].append(user)
 
