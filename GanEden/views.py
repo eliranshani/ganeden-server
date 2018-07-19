@@ -6,7 +6,6 @@ import requests
 
 
 def get_singles(request):
-    result = {'result': []}
     users = requests.get('http://www.designskilz.com/random-users/fakeusers.json').json()
     male_picture_indexes = sample(range(1, 52), 6)
     female_picture_indexes = sample(range(1, 52), 6)
@@ -21,18 +20,30 @@ def get_singles(request):
 
     last_name_indexes = sample(range(0, 112), 12)
     last_names = [users.get('lastNames', {})[i] for i in last_name_indexes]
+
+    address_indexes = sample(range(0, 100), 12)
+    addresses = [users.get('addresses', {})[i] for i in address_indexes]
+
+    ages = sample(range(20, 38), 12)
+
     male_index = 0
     female_index = 0
+    age_index = 0
+    users_list = []
     for i in range(12):
         if i % 2 == 0:
             user = {'name': '{} {}'.format(males_first_names[male_index], last_names[male_index]),
-                    'photoUrl': males_pictures_urls[male_index]}
+                    'photoUrl': males_pictures_urls[male_index],
+                    'location': addresses[male_index],
+                    'age': ages[age_index]}
             male_index += 1
         else:
             user = {'name': '{} {}'.format(females_first_names[female_index], last_names[female_index]),
-                    'photoUrl': females_pictures_urls[female_index]}
+                    'photoUrl': females_pictures_urls[female_index],
+                    'location': addresses[female_index],
+                    'age': ages[age_index]}
             female_index += 1
+        age_index += 1
+        users_list.append(user)
 
-        result['result'].append(user)
-
-    return HttpResponse(json.dumps(result), content_type="application/json")
+    return HttpResponse(json.dumps({'result': users_list}), content_type="application/json")
